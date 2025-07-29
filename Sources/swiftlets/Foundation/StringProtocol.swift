@@ -5,6 +5,8 @@
 //  Created by Kevin Hayes on 2025-04-27.
 //
 
+import Foundation
+
 extension StringProtocol {
 	
 	/// Retrieves the grapheme cluster at the offset provided.
@@ -51,5 +53,21 @@ extension StringProtocol {
 	/// range: the range of clusters. Must be a valid range within the String
 	public subscript(clusterRange range: PartialRangeThrough<Int>) -> SubSequence {
 		self[...index(startIndex, offsetBy: range.upperBound)]
+	}
+
+	// MARK: - Base64URLSafeDecoding
+
+	/// Takes a base64 encoded, URL Fragment allowed percent escaped string and returns Data struct
+	public var base64URLSafeDecoded: Data? {
+		var decodedString = String(self)
+			.replacingOccurrences(of: "-", with: "+")
+			.replacingOccurrences(of: "_", with: "/")
+
+		let paddingCount = self.count % 4
+		if paddingCount > 0 {
+			decodedString = decodedString
+				.appending(String(repeating: "=", count: 4 - paddingCount))
+		}
+		return Data(base64Encoded: decodedString)
 	}
 }
