@@ -5,6 +5,7 @@
 //  Created by Kevin Hayes on 2025-04-27.
 //
 
+import Foundation
 import Testing
 @testable import Swiftlets
 
