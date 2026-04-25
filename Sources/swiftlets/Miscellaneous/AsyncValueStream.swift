@@ -94,9 +94,9 @@ public actor AsyncValueStream<T: Sendable> {
 		continuation = nil
 	}
 
-	// developer note: I'm not sure if we'll need this. I'll leave it here for the preview. If we need it in the future,
-	// feel free to make it public and document it. Consider if we should remove the actions too.
-	fileprivate func stop() {
+	/// Stops the publishing of the stream. Developers should not need to call this
+	/// normally. It is handled during deregisterAction
+	public func stop() {
 		removeContinuation()
 		task?.cancel()
 		task = nil
