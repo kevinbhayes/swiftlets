@@ -8,29 +8,31 @@
 import Testing
 @testable import Swiftlets
 
-@Test func isNil() {
-	let a: Int? = nil
-	#expect(a.isNil)
-	
-	let b: String? = "hello"
-	#expect(!b.isNil)
-}
+@Suite struct OptionalTests {
+	@Test func isNil() {
+		let a: Int? = nil
+		#expect(a.isNil)
 
-@Test func isNotNil() {
-	let a: Int? = 5
-	#expect(a.isNotNil)
+		let b: String? = "hello"
+		#expect(!b.isNil)
+	}
 
-	let b: String? = nil
-	#expect(!b.isNotNil)
-}
+	@Test func isNotNil() {
+		let a: Int? = 5
+		#expect(a.isNotNil)
 
-@Test func testHasContents() {
-	let a: String? = nil
-	#expect(a.hasContents == false)
+		let b: String? = nil
+		#expect(!b.isNotNil)
+	}
 
-	let b: String? = ""
-	#expect(b.hasContents == false)
+	@Test func testHasContents() {
+		let a: String? = nil
+		#expect(a.hasContents == false)
 
-	let c: String? = "hello"
-	#expect(c.hasContents)
+		let b: String? = ""
+		#expect(b.hasContents == false)
+
+		let c: String? = "hello"
+		#expect(c.hasContents)
+	}
 }

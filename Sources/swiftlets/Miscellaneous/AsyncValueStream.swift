@@ -39,9 +39,16 @@ public actor AsyncValueStream<T: Sendable> {
 
 	/// Sends the value of the declared type to those who have registered an action.
 	/// - Parameter value: the value to send. It must match the type used to initialize the AsyncValueStream instance.
-	public nonisolated func send(_ value: T) {
+	public func send(_ value: T) async {
+		let _ = continuation?.yield(value)
+	}
+
+	/// Sends the value of the declared type to those who have registered an action.
+	/// This is a nonisolated function and cannot guarantee order.
+	/// - Parameter value: the value to send. It must match the type used to initialize the AsyncValueStream instance.
+	public nonisolated func sendDetached(_ value: T) {
 		Task {
-			let _ = await continuation?.yield(value)
+			await send(value)
 		}
 	}
 
@@ -108,7 +115,11 @@ public actor AsyncValueStream<T: Sendable> {
 }
 
 public extension AsyncValueStream where T == Void {
-	nonisolated func send() {
-		send(())
+	nonisolated func sendDetached() {
+		sendDetached(())
+	}
+
+	func send() async {
+		await send(())
 	}
 }
