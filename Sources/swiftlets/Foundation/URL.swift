@@ -41,4 +41,26 @@ public extension URL {
 		// Additional check: if the paths are equal, it's not a "parent" relationship
 		return (normalizedSelfPath != childPath)
 	}
+
+	init?(extractedRelativePathFrom url: URL, relativeTo base: URL) {
+		guard url.isFileURL && base.isFileURL else {
+			return nil
+		}
+
+		let destinationComponents = url.standardized.pathComponents
+		let baseComponents = base.standardized.pathComponents
+
+		// Determine backtracking "../"
+		var commonCount = 0
+		while commonCount < destinationComponents.count && commonCount < baseComponents.count
+				&& destinationComponents[commonCount] == baseComponents[commonCount] {
+			commonCount += 1
+		}
+
+		// Build relative path:
+		var relativeComponents = Array(repeating: "..", count: baseComponents.count - commonCount)
+		relativeComponents.append(contentsOf: destinationComponents[commonCount...])
+		let newURL = URL(fileURLWithPath: relativeComponents.joined(separator: "/"), relativeTo: base.standardizedFileURL)
+		self = URL(fileURLWithPath: newURL.relativePath, relativeTo: base)
+	}
 }
